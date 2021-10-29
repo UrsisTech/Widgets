@@ -1,18 +1,24 @@
 from django.shortcuts import render
 from django.shortcuts import render, redirect
-from models import Widget
-from forms import WidgetForm
+from main_app.models import Widget
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, DeleteView
+from django.http import HttpResponseRedirect 
 
 def home(request):
-    return render (request, 'home.html')
-    form = WidgetForm(request.POST)
-    new_widget = form.save()
+    widgets = Widget.objects.all()
+    return render (request, 'home.html',
+    {'widgets': widgets})
 
-class WidgetList(ListView):
+class WidgetCreate(CreateView):
     model = Widget
-    context_object_name = 'widgets'
+    fields = ['description', 'quantity']
+    success_url = ''
+
+class WidgetDelete(DeleteView):
+    model = Widget
+    success_url = ''
+
 
 
 

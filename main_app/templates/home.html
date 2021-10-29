@@ -5,19 +5,38 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/style.css">
     <title>Wacky Widgets</title>
 </head>
 <body>
-    <h1>Wacky Widgets</h1>
+    
     {% csrf_token %}
+    <h1>Wacky Widgets</h1>
     {% if widget_list|length == 0 %}
-    <h1>No Widgets Exist :(</h1>
+    <h3>No Widgets Exist :(</h1>
     {% else %}
-    {% for widget in widget_list %}
+    <table>
+        {% for widget in widget_list %}
+        <tr>
+            <td>{{ widget.description }}</td>
+            <td>{{ widget.quantity }}</td>
+        </tr>
+        {% endfor %}
+        <form action="{% url 'widget_delete' %}" method = "post">
+            <input type="submit" value="Delete">
+        </form> 
+    </table>
     {% endif %}
-    <form action="POST">
-
-        
+    <hr>
+    <h4>Add Widget</h4>
+    
+    <form action="{% url 'widget_create' %} " method="post">
+        {% csrf_token %}
+        <table>
+            <input type="text" name="description" value="description">
+            <input type="number" name="quantity" value="quantity">
+        </table>
+        <input type="submit" value="add Widget">
     </form>
 </body>
 </html>
