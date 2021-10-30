@@ -1,24 +1,32 @@
 from django.shortcuts import render
 from django.shortcuts import render, redirect
-from main_app.models import Widget
+from .models import Widget
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, DeleteView
 from django.http import HttpResponseRedirect 
+from .forms import Form
 
 def home(request):
     widgets = Widget.objects.all()
+    form = Form()
     return render (request, 'home.html',
-    {'widgets': widgets})
+    {'widgets': widgets, 'form' : form})
 
-class WidgetCreate(CreateView):
-    model = Widget
-    fields = ['description', 'quantity']
-    success_url = ''
+def WidgetCreate(request):
+    print('Form')
+    form = Form(request.POST)
+    if form.is_valid():
+        form.save()
+        print()
+    return redirect('home')
+    
 
-class WidgetDelete(DeleteView):
-    model = Widget
-    success_url = ''
-
+def WidgetDelete(request, widget_id):
+    
+    b = Widget.objects.get(id=widget_id)
+    # This will delete the Blog and all of its Entry objects.
+    b.delete()
+    return redirect('home')
 
 
 
